@@ -60,8 +60,10 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 ENV YARN_CACHE_FOLDER=/tmp/.yarn-cache \
     NUXT_TELEMETRY_DISABLED=1 \
-    NODE_OPTIONS="--max-old-space-size=4096" \
     NODE_ENV=production
+# Exo: overridable so the image can be built on a small box (default unchanged).
+ARG NODE_MAX_OLD_SPACE=4096
+ENV NODE_OPTIONS="--max-old-space-size=${NODE_MAX_OLD_SPACE}"
 
 RUN mkdir -p /baserow/web-frontend /baserow/premium/web-frontend /baserow/enterprise/web-frontend && \
     chown -R $UID:$GID /baserow/
