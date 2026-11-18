@@ -1,13 +1,10 @@
 <template>
   <a
-    href="https://baserow.io"
+    href="https://exoflowos.com"
     target="_blank"
-    title="Baserow - open source no-code database tool and Airtable alternative"
+    title="Exo Base — Exo's Airtable alternative"
   >
-    <Logo
-      height="14"
-      alt="Baserow - open source no-code database tool and Airtable alternative"
-    />
+    <Logo height="14" alt="Exo Base" />
   </a>
 </template>
 

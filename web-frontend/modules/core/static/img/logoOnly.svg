@@ -1,16 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30" height="30" viewBox="0 0 30 30">
+<svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" viewBox="0 0 29 29" role="img" aria-label="Exo Base">
   <defs>
-    <clipPath id="clip-logoOnly">
-      <rect width="30" height="30"/>
-    </clipPath>
+    <radialGradient id="exoOrbIcon" cx="36%" cy="30%" r="78%">
+      <stop offset="0%" stop-color="#5a5a60"/>
+      <stop offset="55%" stop-color="#17171a"/>
+      <stop offset="100%" stop-color="#0b0b0c"/>
+    </radialGradient>
   </defs>
-  <g id="logoOnly" clip-path="url(#clip-logoOnly)">
-    <g id="Group_6" data-name="Group 6" transform="translate(893 523)">
-      <path id="Path_37" data-name="Path 37" d="M1.613,0H17.1a1.613,1.613,0,0,1,1.613,1.613V5.8A1.613,1.613,0,0,1,17.1,7.417H1.613A1.613,1.613,0,0,1,0,5.8V1.613A1.613,1.613,0,0,1,1.613,0Z" transform="translate(-874.291 -493) rotate(180)" fill="#4d68c4"/>
-      <path id="Path_35" data-name="Path 35" d="M1.613,0H28.387A1.613,1.613,0,0,1,30,1.613V5.8a1.613,1.613,0,0,1-1.613,1.613H1.613A1.613,1.613,0,0,1,0,5.8V1.613A1.613,1.613,0,0,1,1.613,0Z" transform="translate(-863 -504.291) rotate(180)" fill="#5190ef"/>
-      <path id="Path_36" data-name="Path 36" d="M1.613,0H17.1a1.613,1.613,0,0,1,1.613,1.613V5.8A1.613,1.613,0,0,1,17.1,7.417H1.613A1.613,1.613,0,0,1,0,5.8V1.613A1.613,1.613,0,0,1,1.613,0Z" transform="translate(-863 -515.583) rotate(180)" fill="#2bc3f1"/>
-      <path id="Path_38" data-name="Path 38" d="M1.613,0H5.8A1.613,1.613,0,0,1,7.417,1.613V5.8A1.613,1.613,0,0,1,5.8,7.417H1.613A1.613,1.613,0,0,1,0,5.8V1.613A1.613,1.613,0,0,1,1.613,0Z" transform="translate(-863 -493) rotate(180)" fill="#4d68c4"/>
-      <path id="Path_39" data-name="Path 39" d="M1.613,0H5.8A1.613,1.613,0,0,1,7.417,1.613V5.8A1.613,1.613,0,0,1,5.8,7.417H1.613A1.613,1.613,0,0,1,0,5.8V1.613A1.613,1.613,0,0,1,1.613,0Z" transform="translate(-893 -523)" fill="#2bc3f1"/>
-    </g>
-  </g>
+  <circle cx="14.5" cy="14.5" r="13.4" fill="url(#exoOrbIcon)"/>
+  <circle cx="14.5" cy="14.5" r="13.4" fill="none" stroke="#c9c9cf" stroke-opacity="0.55" stroke-width="0.9"/>
 </svg>
