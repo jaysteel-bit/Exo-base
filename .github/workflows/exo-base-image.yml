@@ -1,0 +1,88 @@
+# Exo Base image — built on GitHub's runners, not on our VPS.
+#
+# Why this exists: the Contabo box cannot host a Nuxt build next to Hermes and
+# the software factory. A local build there drove it to a global OOM and then
+# into unrecoverable memory thrash (2026-11-18). Builds belong on a machine
+# whose only job is the build.
+#
+# Publishes two images to GHCR:
+#   ghcr.io/<owner>/exo-base-web-frontend:<version>  (our rebranded frontend)
+#   ghcr.io/<owner>/exo-base:<version>               (all-in-one, for /opt/exo-base)
+#
+# The backend comes from Docker Hub (baserow/backend:<version>) because this fork
+# does not change backend code yet. When it does, drop the BACKEND_IMAGE arg and
+# build backend/Dockerfile here too.
+
+name: Exo Base image
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Baserow version this image is based on
+        required: true
+        default: "2.4.3"
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  VERSION: ${{ inputs.version }}
+  REGISTRY: ghcr.io
+
+jobs:
+  frontend:
+    name: web-frontend (rebranded)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: web-frontend/Dockerfile
+          target: prod
+          push: true
+          build-args: |
+            UID=9999
+            GID=9999
+          tags: ${{ env.REGISTRY }}/${{ github.repository_owner }}/exo-base-web-frontend:${{ env.VERSION }}
+          cache-from: type=gha,scope=exo-base-frontend
+          cache-to: type=gha,scope=exo-base-frontend,mode=max
+
+  all-in-one:
+    name: all-in-one
+    needs: frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: deploy/all-in-one/Dockerfile
+          target: prod
+          push: true
+          build-args: |
+            BACKEND_IMAGE=baserow/backend:${{ env.VERSION }}
+            WEBFRONTEND_IMAGE=${{ env.REGISTRY }}/${{ github.repository_owner }}/exo-base-web-frontend:${{ env.VERSION }}
+          tags: ${{ env.REGISTRY }}/${{ github.repository_owner }}/exo-base:${{ env.VERSION }}
+          cache-from: type=gha,scope=exo-base-all-in-one
+          cache-to: type=gha,scope=exo-base-all-in-one,mode=max
