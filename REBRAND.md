@@ -27,6 +27,20 @@ all-in-one container, loopback `127.0.0.1:9180`, plain HTTP inside; TLS ends at
 Cloudflare. Public host reaches it through the `exo-contabo` tunnel
 (`base.exoflowos.com → http://127.0.0.1:9180`, tunnel config v7).
 
+### Build from the release branch, not `develop` (2026-11-18)
+
+The all-in-one image composes our frontend with **`baserow/backend:<version>` from Docker Hub**, i.e. the released
+backend. So the rebrand must sit on **the release commit**, not on post-release `develop`:
+
+- Branch `exo-base-2.4.3` = upstream tag `2.4.3` (`d897b90`) + the rebrand commits, cherry-picked.
+- The workflow asserts the branch name is `exo-base-<version>` and that
+  `web-frontend/package.json` matches, and fails otherwise.
+
+Why the guard exists: the first attempt put the rebrand on `develop` (`74d6625`), which is *after* the 2.4.3 release.
+A newer frontend against the released backend still reports version 2.4.3 on both sides, so the mismatch is invisible
+until something behaves oddly. Claude caught it before CI was ever run. When bumping Baserow: fetch the new tag, branch
+`exo-base-<new version>` from it, cherry-pick the rebrand commits onto it, dispatch the workflow on that branch.
+
 Low-memory mode is on (`BASEROW_RUN_MINIMAL=yes`, `BASEROW_AMOUNT_OF_WORKERS=1`)
 because the box shares RAM with the software factory and Hermes. Steady state is
 ~1.7 GB.
