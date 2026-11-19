@@ -38,6 +38,28 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Guard (2026-11-18): this branch must be built on the release commit the
+      # backend image comes from. Our first attempt sat on post-release `develop`,
+      # which pairs a newer frontend with the released backend while both still
+      # report version 2.4.3 — a mismatch that looks fine. The branch is named for
+      # its base, so assert that, and assert the version string too.
+      - name: Assert the base matches the backend version
+        run: |
+          set -euo pipefail
+          branch="${GITHUB_REF_NAME}"
+          version="${{ env.VERSION }}"
+          if [ "$branch" != "exo-base-$version" ]; then
+            echo "::error::Build from branch exo-base-$version (the release commit), not '$branch'."
+            echo "A frontend from post-release develop does not match baserow/backend:$version."
+            exit 1
+          fi
+          pkg=$(node -p "require('./web-frontend/package.json').version")
+          if [ "$pkg" != "$version" ]; then
+            echo "::error::web-frontend/package.json says $pkg, expected $version."
+            exit 1
+          fi
+          echo "Base ok: branch $branch, package version $pkg"
+
       - uses: docker/setup-buildx-action@v3
 
       - uses: docker/login-action@v3
